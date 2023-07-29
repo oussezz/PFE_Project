@@ -1,0 +1,217 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block stylesheets %}
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <!-- Load Bootstrap CSS and JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <!-- Set up some CSS for the map and modal -->
+    
+
+{% endblock stylesheets %}
+  
+{% block title %}
+Statistics
+{% endblock title %}
+{% block stats_sidebar %}
+  active
+{% endblock stats_sidebar %}
+
+{% block titre %}
+Statistics
+{% endblock titre %}
+
+{% block definition %}
+    This page shows the Statistics of the platform.
+{% endblock definition %}
+
+
+{% block chemin %}
+    <li class="breadcrumb-item">
+        <a href="/"> <i class="fa fa-home"></i> </a>
+    </li>
+    <li class="breadcrumb-item"><a href="#!">Dashboard</a>
+    </li>
+    <li class="breadcrumb-item"><a href="#!">Statistics</a>
+    </li>
+{% endblock chemin %}
+    
+
+
+
+
+
+{% block content %}
+
+<center>
+
+
+    <h1  >
+      <span style="border-radius:15px;background-color: white;">
+      Statistics</span>
+    </h1>    
+    <hr> 
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12" style="width=100%;background-color: white;border-radius:15px;max-height:400px;">
+          <canvas id="myChart4"></canvas>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12 col-lg-6" style="width=100%;background-color: white;border-radius:15px;">
+          <canvas id="myChart1"></canvas>
+        </div>
+        <div class="col-md-12 col-lg-6" style="max-height:350px;width=100%;background-color: white;border-radius:15px;">
+          <canvas id="myChart2"></canvas>
+        </div>
+      </div>
+      <hr>
+      <div class="row">
+        <div class="col-md-12" style="width=100%;background-color: white;border-radius:15px;max-height:400px;">
+          <canvas id="myChart3"></canvas>
+        </div>
+      </div>
+      
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <script>
+      const ctx = document.getElementById('myChart1');
+    
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: [
+            {% for camera in data %}
+              '{{ camera.camera }}',
+            {% endfor %}
+          ],
+          datasets: [{
+            label: 'Size of Video History (MB) for each camera',
+            data: [
+              {% for camera in data %}
+                {{ camera.size }},
+              {% endfor %}
+            ],
+            borderWidth: 2
+          }]
+        },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          }
+        }
+      });
+      const ctx2 = document.getElementById('myChart2');
+    
+      new Chart(ctx2, {
+        type: 'pie',
+        data: {
+          labels: [
+            {% for camera in data %}
+              '{{ camera.camera }}',
+            {% endfor %}
+          ],
+          datasets: [{
+            label: 'Size of Video History (MB) for each camera',
+            data: [
+              {% for camera in data %}
+                {{ camera.size }},
+              {% endfor %}
+            ],
+            borderWidth: 2
+          }]
+        },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          }
+        }
+      });
+
+      const ctx3 = document.getElementById('myChart3');
+    
+      const labels = [
+        {% for visit in visits %}
+        '{{ visit.date_time }}',
+      {% endfor %}
+      ]
+      ;
+      const data = {
+        labels: labels,
+        datasets: [{
+          label: 'Number of platform visits per day',
+          data:
+          [
+            {% for visit in visits %}
+            {{ visit.number_of_visits }},
+          {% endfor %}
+          ],
+          fill: false,
+          borderColor: 'rgb(75, 192, 192)',
+          tension: 0.1
+        }]
+      };
+      new Chart(ctx3, {
+        type: 'line',
+        data: data,
+      });
+      const ctx4 = document.getElementById('myChart4');
+    const data2 = {
+    labels: ["January", "February", "March", "April", "May", "June", "July"],
+    datasets: [{
+    label: 'Fires per mounth',
+    data: [6, 5, 8, 8, 5, 5, 4],
+    backgroundColor: [
+      'rgba(255, 99, 132, 0.2)',
+      'rgba(255, 159, 64, 0.2)',
+      'rgba(255, 205, 86, 0.2)',
+      'rgba(75, 192, 192, 0.2)',
+      'rgba(54, 162, 235, 0.2)',
+      'rgba(153, 102, 255, 0.2)',
+      'rgba(201, 203, 207, 0.2)'
+    ],
+    borderColor: [
+      'rgb(255, 99, 132)',
+      'rgb(255, 159, 64)',
+      'rgb(255, 205, 86)',
+      'rgb(75, 192, 192)',
+      'rgb(54, 162, 235)',
+      'rgb(153, 102, 255)',
+      'rgb(201, 203, 207)'
+    ],
+    borderWidth: 1}],
+};
+      new Chart(ctx4, {
+        type: 'bar',
+        data: data2,
+      });
+
+
+      
+
+    </script>
+    
+
+    
+
+
+  </center>
+
+
+  {% endblock content %}
+    
+
+{% block javascript %}
+
+{% endblock javascript %}
+    

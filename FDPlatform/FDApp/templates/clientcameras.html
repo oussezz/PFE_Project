@@ -1,0 +1,83 @@
+{% extends 'base_client.html' %}
+{% load static %}
+
+{% block title %}
+    Cameras flow
+{% endblock title %}
+
+
+{% block titre %}
+  Cameras flow
+{% endblock titre %}
+
+{% block definition %}
+    This page shows the cameras flow.
+{% endblock definition %}
+
+
+{% block chemin %}
+    <li class="breadcrumb-item">
+        <a href="/"> <i class="fa fa-home"></i> </a>
+    </li>
+    <li class="breadcrumb-item"><a href="#!">View cameras</a>
+    </li>
+{% endblock chemin %}
+    
+
+
+
+
+{% block content %}
+
+
+  <center>
+    <h1 >Cameras flow</h1>
+
+
+    
+    <section class="row g-3">
+      {% for camera in cameras %}
+  
+              <article class="col-12 col-sm-6 col-md-4 ">
+                  <center>
+                  <hr>
+                  
+                      <h1>{{camera.name}}</h1>
+                      <a id="{{camera.id}}" onclick=func({{camera.id}})>
+                        <img  class="img-fluid rounded mx-auto d-block" style="max-height:450px; background-color:white;" src="/media/play.png">
+                      </a>
+                      <script>
+                        function func(id) {
+                          //send ajax request
+                          $.ajax({
+                            url: '/live_camera_ajax/'+id,
+                            type: 'GET',
+                            success: function (data) {
+                              //get the element
+                              var element = document.getElementById(id);
+                              element.innerHTML = data;
+                              
+                            },
+
+                          });
+                        };
+                      </script>
+                  
+  
+              </center>
+              </article>
+  
+      {% endfor %}
+  </section>
+
+
+  </center>
+
+
+  {% endblock content %}
+    
+
+{% block javascript %}
+
+{% endblock javascript %}
+    

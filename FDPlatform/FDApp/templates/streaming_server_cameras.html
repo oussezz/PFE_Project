@@ -1,0 +1,389 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block stylesheets %}
+<style>
+  #map-modal {
+    z-index: 1051;
+  }
+
+  #addCameraModal {
+    z-index: 1050;
+  }
+</style>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <!-- Load Bootstrap CSS and JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <!-- Set up some CSS for the map and modal -->
+    <style>
+        #map {
+            height: 400px;
+            width: 100%;
+        }
+    </style>
+    <link rel="stylesheet" href="{% static 'assets/leaflet/leaflet.css'%}"/>
+    <script src="{% static 'assets/leaflet/leaflet.js'%}"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
+         integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI="
+         crossorigin=""/>
+         <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"
+         integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM="
+         crossorigin=""></script>
+         <link rel="stylesheet" href="https://cdn.jsdelivr.net/leaflet.offline/0.7.2/leaflet-offline.css" />
+         <script src="https://cdn.jsdelivr.net/leaflet.offline/0.7.2/leaflet-offline.min.js"></script>
+    
+    <style>
+    
+    /* Style for the info window */
+    .leaflet-popup-content {
+      font-family: Arial, sans-serif;
+      font-size: 14px;
+      line-height: 1.5;
+      max-width: 250px;
+      color: #333; /* Set the default text color */
+    }
+    
+    /* Style for the info window title */
+    .leaflet-popup-content h3 {
+      margin-top: 0;
+      margin-bottom: 10px;
+      font-size: 18px;
+      font-weight: bold;
+      color: #555; /* Set the title text color */
+    }
+    
+    /* Style for the info window body */
+    .leaflet-popup-content p {
+      margin-top: 0;
+      margin-bottom: 5px;
+      color: #777; /* Set the body text color */
+    }
+    
+    </style>
+{% endblock stylesheets %}
+  
+{% block title %}
+    Streaming server cameras
+{% endblock title %}
+{% block cameras_sidebar %}
+  active
+{% endblock cameras_sidebar %}
+
+{% block titre %}
+    Streaming server cameras
+{% endblock titre %}
+
+{% block definition %}
+    This page shows the onligne cameras of the streaming server.
+{% endblock definition %}
+
+
+{% block chemin %}
+    <li class="breadcrumb-item">
+        <a href="/"> <i class="fa fa-home"></i> </a>
+    </li>
+    <li class="breadcrumb-item"><a href="#!">Streaming server</a>
+    </li>
+    <li class="breadcrumb-item"><a href="#!">Cameras</a>
+    </li>
+{% endblock chemin %}
+    
+
+
+
+
+
+{% block content %}
+
+
+
+
+
+
+{% comment %} Map modal {% endcomment %}
+<div class="modal fade" id="map-modal" tabindex="-1" role="dialog" aria-labelledby="map-modal-title" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title" id="map-modal-title">Set Camera Position</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+          </div>
+          <div class="modal-body">
+              <div id="map" style="height: 500px;"></div>
+          </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+      </div>
+  </div>
+</div>
+
+<!-- Load your app script -->
+<script>
+ 
+</script>
+
+
+
+
+{% comment %} edit camera modal {% endcomment %}
+<div class="modal fade" id="EditCameraModal" tabindex="-1" role="dialog" aria-labelledby="addCameraModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addCameraModalLabel">Edit Camera</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form id="editCameraForm" method="post">
+          {% csrf_token %}
+          <input type="hidden" id="editcameraID" name="editcameraID">
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="editcameraName">Name</label>
+            <input type="text" class="form-control" id="editcameraName" name="editcameraName" placeholder="Enter camera name">
+          </div>
+          <div class="form-group">
+            <label for="editcameraIP">IP Address</label>
+            <input pattern="^(\d{1,3}\.){3}\d{1,3}$" type="text" class="form-control" id="editcameraIP" name="editcameraIP" placeholder="Enter camera IP address">
+          </div>
+          <br>
+          <div class="form-group">
+            <label for="users_permission">Simple users permission</label>
+            <hr>
+            {% for user in  users %}
+            <label style="margin-right:20px;">
+              <input type="checkbox" name="{{user.id}}" value="Option 1">
+              {{user.username|capfirst}}
+            </label>
+
+            {% endfor %}
+          </div>
+        </div>
+        
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary" >Save changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+
+{% comment %} add camera modal {% endcomment %}
+<div class="modal fade" id="addCameraModal" tabindex="-2  " role="dialog" aria-labelledby="addCameraModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addCameraModalLabel">Add Camera</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <form id="addCameraForm">
+          {% csrf_token %}
+          <div class="modal-body">
+              <div class="form-group">
+                  <label for="cameraName">Name</label>
+                  <input type="text" class="form-control" id="cameraName" name="cameraName" placeholder="Enter camera name">
+              </div>
+              <div class="form-group">
+                  <label for="cameraIP">IP Address</label>
+                  <input pattern="^(\d{1,3}\.){3}\d{1,3}$" type="text" class="form-control" id="cameraIP" name="cameraIP" placeholder="Enter camera IP address">
+              </div>
+      
+              <div class="form-group row">
+                  <div class="col">
+                      <label for="editcameraLatitude">Latitude</label>
+                      <input type="text" class="form-control" id="editcameraLatitude" name="editcameraLatitude" placeholder="Enter camera latitude">
+                  </div>
+                  <div class="col">
+                      <label for="editcameraLongitude">Longitude</label>
+                      <input type="text" class="form-control" id="editcameraLongitude" name="editcameraLongitude" placeholder="Enter camera longitude">
+                      
+                    </div>
+              </div>
+          </div>
+          <div class="modal-footer">
+            <button id="setPosition" type="button" class="btn btn-success" data-toggle="modal" data-target="#map-modal">Set Position</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary">Add camera</button>
+          </div>
+      </form>
+      
+      </div>
+    </div>
+  </div>
+  
+
+  {% comment %} delete modal {% endcomment %}
+
+
+  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Delete the camera?</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" id="surdele">
+          ...
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <a id="dele"><button  type="button" class="btn btn-danger">Delete</button></a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+  <center>
+    <div id='addAlert' class="alert alert-success" role="alert">
+      <i class="bi bi-check-circle-fill me-2"></i>
+      The camera added successfully.
+    </div>
+
+    <div id="deleteAlert" class="alert alert-danger alert-dismissible fade show" role="alert">
+      <i class="bi bi-exclamation-triangle-fill me-2"></i>
+      The camera has been deleted successfully.
+    </div>
+    <div id="editAlert" class="alert alert-warning alert-dismissible fade show" role="alert">
+      <i class="bi bi-camera-video-fill me-2"></i>
+      The camera has been edited successfully.
+    </div>
+    
+    
+
+    <h1 >Streaming server cameras</h1>
+    <button type="button" class="btn btn-primary  float-left" data-toggle="modal" data-target="#addCameraModal">
+      Add camera
+      </button>
+      <br>
+      
+      
+    <table style="padding-top:20px" id="example" class="table table-striped table-bordered dt-responsive nowrap" style="width:100%">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>IP</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="bd">
+            {% for camera in cameras %}
+                <tr>
+                    <td>{{ camera.id }}</td>
+                    <td>{{ camera.name }}</td>
+                    <td>{{ camera.ip }}</td>
+                    <td>
+                        
+                        {% if not camera.status%}
+                            <a id="status{{camera.id}}" class="btn btn-success btn-sm" style="color: white">Activate</a>
+                        {% else %}
+                            <a id="status{{camera.id}}" class="btn btn-danger btn-sm" style="color: white">Deactivate</a>
+                        {% endif %}
+                        
+                        <script type="text/javascript">
+                          var btn = document.getElementById("status{{camera.id}}");
+                          btn.onclick = function() {
+                            activate({{camera.id}});
+                          };
+
+
+                        </script>
+                    </td>
+                    <td>
+                        {% if not camera.status%}
+                            <a target="_blank" id="view{{camera.id}}" href="/view_camera/{{camera.id}}" class="btn btn-primary btn-sm">View</a>
+                        {% else %}
+                            <a target="_blank" id="view{{camera.id}}" href="/view_camera/{{camera.id}}" class="btn btn-primary btn-sm ">View</a>
+                        {% endif %}
+                        
+                        <a href="#myModal" data-target="#EditCameraModal"  class="btn btn-warning  btn-sm" data-toggle="modal" id="edit{{camera.id}}"><span>Edit</span></a>
+                       
+                        <a href="#myModal" data-target="#exampleModal"  class="btn btn-danger btn-sm" data-toggle="modal" id="btn{{camera.id}}"><span>Delete</span></a>
+                       
+                      </td>
+                </tr>
+                <script type="text/javascript">
+                  document.getElementById("btn{{camera.id}}").onclick = function() {
+                    document.getElementById("surdele").innerHTML = "Are you sure you want to delete the camera {{camera.name}}?"; 
+                      document.getElementById("dele").onclick = function() {
+                         AjaxDeletionFunction({{camera.id}});
+                      };
+                  };
+                  document.getElementById("edit{{camera.id}}").onclick = function() {
+                    document.getElementById("editcameraName").value = "{{camera.name}}";
+                    document.getElementById("editcameraIP").value = "{{camera.ip}}";
+                    document.getElementById("editcameraID").value = "{{camera.id}}";
+
+                  };
+              </script>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+
+
+  </center>
+
+
+  {% endblock content %}
+    
+
+{% block javascript %}
+<script type="text/javascript" src="{% static 'utils/dt.js'%}"></script>
+<script type="text/javascript" src="{% static 'utils/add_camera_ajax.js'%}"></script>
+<script type="text/javascript" src="{% static 'utils/delete_camera_ajax.js'%}"></script>
+<script type="text/javascript" src="{% static 'utils/activate_camera.js'%}"></script>
+<script>
+
+  document.getElementById("setPosition").onclick = function() {
+     // Create the map and set its initial view to a location
+     var map = L.map('map').setView([36.409458, 2.863086], 13);
+
+L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{
+  maxZoom: 18,
+  id: 'mapbox/streets-v11', // use the style ID for the desired map style
+  tileSize: 512,
+  zoomOffset: -1,// replace with your Mapbox access token
+}).addTo(map);
+
+
+  // Add a marker to the map when the user clicks on it
+  var marker;
+  map.on('click', function(e) {
+      if (marker) {
+          marker.setLatLng(e.latlng);
+      } else {
+          marker = L.marker(e.latlng).addTo(map);
+      }
+
+      // Update the position input field with the new coordinates
+      document.getElementById('editcameraLatitude').value = e.latlng.lat.toFixed(6);
+      document.getElementById('editcameraLongitude').value = e.latlng.lng.toFixed(6);
+
+      // Hide the modal
+      $('#map-modal').modal('hide');
+  });
+  };
+
+
+</script>
+{% endblock javascript %}
+    

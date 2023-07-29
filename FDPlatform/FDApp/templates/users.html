@@ -1,0 +1,186 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    Users
+{% endblock title %}
+{% block users_sidebar %}
+  active
+{% endblock users_sidebar %}
+
+{% block titre %}
+    Simple users
+{% endblock titre %}
+
+{% block definition %}
+    This page allows you to manage the simple users of the platform.
+{% endblock definition %}
+
+
+{% block chemin %}
+    <li class="breadcrumb-item">
+        <a href="/"> <i class="fa fa-home"></i> </a>
+    </li>
+    <li class="breadcrumb-item"><a href="#!">Accounts management</a>
+    </li>
+    <li class="breadcrumb-item"><a href="#!">Users</a>
+    </li>
+{% endblock chemin %}
+
+
+
+
+
+
+{% block content %}
+
+
+
+
+
+<center>
+    <h1 >Platform simple users</h1>
+    <button type="button" class="btn btn-primary  float-left" data-toggle="modal" data-target="#addUserModal">
+      Add user
+      </button>
+      <br>
+      
+      
+    <table style="padding-top:20px" id="example" class="table table-striped table-bordered dt-responsive nowrap" style="width:100%">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>First name</th>
+                <th>Last name</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Actions</th>
+                
+            </tr>
+        </thead>
+        <tbody id="bd">
+            {% for user in users %}
+            
+            {% if not user.is_staff %}
+            <tr>
+                <td>{{user.id}}</td>
+                <td>{{user.first_name}}</td>
+                <td>{{user.last_name}}</td>
+                <td>{{user.username}}</td>
+                <td>{{user.email}}</td>
+                <td>
+                    <button id="delete{{user.id}}" type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#exampleModal">
+                        Delete
+                    </button>
+                    
+                </td>
+            </tr>
+            <script>
+                document.getElementById("delete{{user.id}}").onclick = function() {
+                    document.getElementById("surdele").innerHTML = "Are you sure you want to delete the user {{user.username}} ?";
+                    document.getElementById("dele").href = "/delete_user/{{user.id}}";
+                };
+
+            </script>
+
+            {% endif %}
+                
+            {% endfor %}
+        </tbody>
+    </table>
+    
+
+
+  </center>
+
+{% comment %} delete modal {% endcomment %}
+
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Delete the user?</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" id="surdele">
+        ...
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <a id="dele"><button  type="button" class="btn btn-danger">Delete</button></a>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+  <!-- Button trigger modal -->
+  
+  <!-- Modal -->
+  <div class="modal fade" id="addUserModal" tabindex="-1" role="dialog" aria-labelledby="addUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addUserModalLabel">Add user</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="addUserForm" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-group">
+              <label for="username">Username</label>
+              <input type="text" class="form-control" id="username" name="username">
+            </div>
+            <div class="form-group">
+              <label for="first_name">First Name</label>
+              <input type="text" class="form-control" id="first_name" name="first_name">
+            </div>
+            <div class="form-group">
+              <label for="last_name">Last Name</label>
+              <input type="text" class="form-control" id="last_name" name="last_name">
+            </div>
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input type="email" class="form-control" id="email" name="email">
+            </div>
+            <div class="form-group">
+              <label for="password">Password</label>
+              <input type="password" class="form-control" id="password" name="password">
+            </div>
+            <div class="form-group">
+              <label for="image">Image</label>
+              <input type="file" class="form-control-file" id="image" name="image">
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary" form="addUserForm">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+
+
+
+{% endblock content %}
+    
+
+
+
+  {% block javascript %}
+<script type="text/javascript" src="{% static 'utils/dt.js'%}"></script>
+<script type="text/javascript" src="{% static 'utils/add_camera_ajax.js'%}"></script>
+<script type="text/javascript" src="{% static 'utils/delete_camera_ajax.js'%}"></script>
+<script type="text/javascript" src="{% static 'utils/activate_camera.js'%}"></script>
+
+{% endblock javascript %}
+    

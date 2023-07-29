@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    Camera flow
+{% endblock title %}
+
+
+{% block titre %}
+  Camera flow
+{% endblock titre %}
+
+{% block definition %}
+    This page shows the camera {{camera.id}} flow.
+{% endblock definition %}
+
+
+{% block chemin %}
+    <li class="breadcrumb-item">
+        <a href="/"> <i class="fa fa-home"></i> </a>
+    </li>
+    <li class="breadcrumb-item"><a href="#!">Streaming server</a>
+    </li>
+    <li class="breadcrumb-item"><a href="#!">Cameras</a>
+    </li>
+    <li class="breadcrumb-item"><a href="#!">{{camera.id}}</a>
+    </li>
+{% endblock chemin %}
+    
+
+
+
+
+{% block content %}
+
+
+  <center>
+    <h1 >Camera {{camera.id}} flow</h1>
+    
+      <img class="img-fluid rounded mx-auto d-block" style="max-height:450px" src="/live_camera/{{camera.id}}">
+    
+
+
+
+  </center>
+
+
+  {% endblock content %}
+    
+
+{% block javascript %}
+
+{% endblock javascript %}
+    

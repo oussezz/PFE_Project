@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    Fire detection API
+{% endblock title %}
+{% block traitement_sidebar %}
+  active
+{% endblock traitement_sidebar %}
+
+{% block titre %}
+Fire detection API
+{% endblock titre %}
+
+{% block definition %}
+    This page allows you to check if there is a fire in the image you upload.
+{% endblock definition %}
+
+
+{% block chemin %}
+    <li class="breadcrumb-item">
+        <a href="/"> <i class="fa fa-home"></i> </a>
+    </li>
+    <li class="breadcrumb-item"><a href="#!">Traitement server</a>
+    </li>
+    <li class="breadcrumb-item"><a href="#!">Fire detection</a>
+    </li>
+    
+{% endblock chemin %}
+
+
+
+{% block content %}
+
+{% block alert %}
+  
+  {% if alert %}
+  <div class="alert alert-success" role="alert">
+    <i class="bi bi-check-circle-fill me-2"></i>
+    Information updated successfully.
+  </div>
+  <script>
+    setTimeout(function() {
+      $('.alert').fadeOut('slow');
+    }, 4000);
+  </script>
+    
+    
+  {% endif %}
+    
+{% endblock alert %}
+  
+<center>
+  <div class="row">
+    <div class="col-sm-12">
+        <!-- Basic Form Inputs card start -->
+        <div class="card">
+            <div class="card-block">
+                <h4 class="sub-title">Fire detection API</h4>
+            </div>
+              <div>
+                <img class="img-fluid img-thumbnail text-center" style="width:100%; max-width:500px" id="img" src = "{{img}}"/>
+              </div>
+              <div style="text-align: center">
+                <form method="POST" enctype='multipart/form-data'>
+                  {% csrf_token %}
+                      <input style="margin-top:20px" type="file" id="id_img">
+                      <div> 
+
+                        <input style="margin-top:20px" type="submit" class="btn btn-primary" value="Check">
+                      </div>
+                </form>
+              </div>
+        </div>
+        <!-- Basic Form Inputs card end -->
+    </div>
+  </div>
+  <script>
+    document.getElementById('id_img').onchange=function(event) {
+      var image = document.getElementById('img');
+      image.src = URL.createObjectURL(event.target.files[0]);
+
+    };
+    </script>
+</center>
+{% endblock content %}
+    
+
+
+
+  {% block javascript %}
+<script type="text/javascript" src="{% static 'utils/dt.js'%}"></script>
+<script type="text/javascript" src="{% static 'utils/add_camera_ajax.js'%}"></script>
+<script type="text/javascript" src="{% static 'utils/delete_camera_ajax.js'%}"></script>
+<script type="text/javascript" src="{% static 'utils/activate_camera.js'%}"></script>
+
+{% endblock javascript %}
+    

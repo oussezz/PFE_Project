@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block stylesheets %}
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <!-- Load Bootstrap CSS and JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <!-- Set up some CSS for the map and modal -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-+Tmj+REZ9JWquBvDGv+RItHxSfSd8WbJhDwQ2EF+0qny4c8WY6CvJvo+1RmzokH8dPllFdnwDf2b4l3P4a9nWQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdn.materialdesignicons.com/5.4.55/css/materialdesignicons.min.css">
+
+
+{% endblock stylesheets %}
+  
+{% block title %}
+    {{camera.ip}} history
+{% endblock title %}
+{% block history_sidebar %}
+  active
+{% endblock history_sidebar %}
+
+{% block titre %}
+    {{camera.ip}} history
+{% endblock titre %}
+
+{% block definition %}
+    This page shows the history of the {{camera.ip}} camera.
+{% endblock definition %}
+
+
+{% block chemin %}
+    <li class="breadcrumb-item">
+        <a href="/"> <i class="fa fa-home"></i> </a>
+    </li>
+    <li class="breadcrumb-item"><a href="#!">Streaming server</a>
+    </li>
+    <li class="breadcrumb-item"><a href="#!">History</a>
+    </li>
+    <li class="breadcrumb-item"><a href="#!">{{camera.ip}}</a>
+    </li>
+{% endblock chemin %}
+    
+
+
+
+
+
+{% block content %}
+
+<center>
+
+    <h1 >{{camera.ip}} camera history</h1>
+    <button type="button" class="btn btn-primary float-left" onclick="location.reload()">
+      Refresh
+  </button>
+  
+      <br>
+      
+      
+    <table style="padding-top:20px" id="example" class="table table-striped table-bordered dt-responsive nowrap" style="width:100%">
+        <thead>
+            <tr>
+              <th>Name</th>
+              <th>Size</th>
+              <th>View</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for video in video_data %}
+              <tr>
+                <td class="accordion">{{ video.name }}</td>
+                <td>{{ video.size }} Mo</td>
+                <td><a href="/media/{{ video.url }}">View</a></td>
+                <td>
+                  <button class="btn btn-success btn-sm" ><a  download href="{{ video.url }}">
+                    <i class="mdi mdi-download mdi-24px" download style="color: white;"></i>
+                  </a></button>
+                      <button class="btn btn-danger btn-sm"><a href="{{ video.url }}" target="_blank">
+                        <i class="mdi mdi-delete mdi-24px" style="color: white;"></i>
+                      </a></button>
+                      
+                  </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+    </table>
+    
+  </center>
+
+
+  {% endblock content %}
+    
+
+{% block javascript %}
+<script type="text/javascript" src="{% static 'utils/dt.js'%}"></script>
+
+{% endblock javascript %}
+    

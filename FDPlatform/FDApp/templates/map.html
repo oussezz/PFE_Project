@@ -1,0 +1,131 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    Map
+{% endblock title %}
+
+
+
+{% block stylesheets %}
+<link rel="stylesheet" href="{% static 'assets/leaflet/leaflet.css'%}"/>
+<script src="{% static 'assets/leaflet/leaflet.js'%}"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
+     integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI="
+     crossorigin=""/>
+     <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"
+     integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM="
+     crossorigin=""></script>
+     <link rel="stylesheet" href="https://cdn.jsdelivr.net/leaflet.offline/0.7.2/leaflet-offline.css" />
+     <script src="https://cdn.jsdelivr.net/leaflet.offline/0.7.2/leaflet-offline.min.js"></script>
+
+<style>
+
+/* Style for the info window */
+.leaflet-popup-content {
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  max-width: 250px;
+  color: #333; /* Set the default text color */
+}
+
+/* Style for the info window title */
+.leaflet-popup-content h3 {
+  margin-top: 0;
+  margin-bottom: 10px;
+  font-size: 18px;
+  font-weight: bold;
+  color: #555; /* Set the title text color */
+}
+
+/* Style for the info window body */
+.leaflet-popup-content p {
+  margin-top: 0;
+  margin-bottom: 5px;
+  color: #777; /* Set the body text color */
+}
+
+</style>
+     
+{% endblock stylesheets %}
+
+  
+
+{% block map_sidebar %}
+  active
+{% endblock map_sidebar %}
+
+{% block titre %}
+Map
+{% endblock titre %}
+
+{% block definition %}
+    This page allows you to see the map of the installed cameras.
+{% endblock definition %}
+
+
+{% block chemin %}
+    <li class="breadcrumb-item">
+        <a href="/"> <i class="fa fa-home"></i> </a>
+    </li>
+    <li class="breadcrumb-item"><a href="#!">Streaming server</a>
+    </li>
+    <li class="breadcrumb-item"><a href="#!">Map</a>
+    </li>
+    
+{% endblock chemin %}
+
+
+
+{% block content %}
+
+{% block alert %}
+    
+{% endblock alert %}
+  
+<center>
+  <div class="row">
+    <div class="col-sm-12">
+        <!-- Basic Form Inputs card start -->
+        <div class="card">
+            <div class="card-block">
+                <h4 class="sub-title">Map</h4>
+            </div>
+            {% comment %} include the leaflet map {% endcomment %}
+            <div id="mapid" style="height: 600px;"></div>
+<script>
+    var mymap = L.map('mapid').setView([36.78966, 3.26303], 13);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {maxZoom: 999,
+        id: 'mapbox.streets',
+    }).addTo(mymap);
+   // var cameraIcon = L.icon({
+   //   iconUrl: 'media/camera-drone.png',
+    //  iconSize: [64, 64],
+    //  iconAnchor: [32, 32],
+    //  popupAnchor: [0, -16]
+  //});
+  
+    {% for camera in cameras %}
+      var marker = L.marker([{{ camera.gps_position_x }}, {{ camera.gps_position_y }}]).addTo(mymap)
+      .bindPopup('<div class="info-window">' +
+        '<h3>' + '{{camera.name}}' + '</h3>' +
+        '<p><strong>IP Address:</strong> ' + '{{camera.ip}}' + '</p>' +
+        '<p><strong>Position:</strong> ' + [{{camera.gps_position_x}},{{camera.gps_position_y}}].toString() + '</p>' +
+      '</div>')
+      .openPopup();
+    {% endfor %}
+  
+</script>
+
+
+            
+
+            
+        </div>
+        <!-- Basic Form Inputs card end -->
+    </div>
+  </div>
+</center>
+{% endblock content %}
+    

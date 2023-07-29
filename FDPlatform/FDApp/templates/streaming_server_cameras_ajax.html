@@ -1,0 +1,50 @@
+{% for camera in cameras %}
+                <tr>
+                    <td>{{ camera.id }}</td>
+                    <td>{{ camera.name }}</td>
+                    <td>{{ camera.ip }}</td>
+                    <td>
+                        
+                        {% if not camera.status%}
+                            <a id="status{{camera.id}}" class="btn btn-success btn-sm" style="color: white">Activate</a>
+                        {% else %}
+                            <a id="status{{camera.id}}" class="btn btn-danger btn-sm" style="color: white">Deactivate</a>
+                        {% endif %}
+                        
+                        <script type="text/javascript">
+                          var btn = document.getElementById("status{{camera.id}}");
+                          btn.onclick = function() {
+                            activate({{camera.id}});
+                          };
+
+
+                        </script>
+                    </td>
+                    <td>
+                        {% if not camera.status%}
+                            <a id="view{{camera.id}}" href="/view_camera/{{camera.id}}" class="btn btn-primary btn-sm">View</a>
+                        {% else %}
+                            <a id="view{{camera.id}}" href="/view_camera/{{camera.id}}" class="btn btn-primary btn-sm ">View</a>
+                        {% endif %}
+                        
+                        <a href="#myModal" data-target="#EditCameraModal"  class="btn btn-warning  btn-sm" data-toggle="modal" id="edit{{camera.id}}"><span>Edit</span></a>
+                       
+                        <a href="#myModal" data-target="#exampleModal"  class="btn btn-danger btn-sm" data-toggle="modal" id="btn{{camera.id}}"><span>Delete</span></a>
+                       
+                      </td>
+                </tr>
+                <script type="text/javascript">
+                  document.getElementById("btn{{camera.id}}").onclick = function() {
+                    document.getElementById("surdele").innerHTML = "Are you sure you want to delete the camera {{camera.name}}?"; 
+                      document.getElementById("dele").onclick = function() {
+                         AjaxDeletionFunction({{camera.id}});
+                      };
+                  };
+                  document.getElementById("edit{{camera.id}}").onclick = function() {
+                    document.getElementById("editcameraName").value = "{{camera.name}}";
+                    document.getElementById("editcameraIP").value = "{{camera.ip}}";
+                    document.getElementById("editcameraID").value = "{{camera.id}}";
+
+                  };
+              </script>
+            {% endfor %}

@@ -1,0 +1,138 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    My account
+{% endblock title %}
+{% block myaccount_sidebar %}
+  active
+{% endblock myaccount_sidebar %}
+
+{% block titre %}
+    My account
+{% endblock titre %}
+
+{% block definition %}
+    This page allows you to manage your account.
+{% endblock definition %}
+
+
+{% block chemin %}
+    <li class="breadcrumb-item">
+        <a href="/"> <i class="fa fa-home"></i> </a>
+    </li>
+    <li class="breadcrumb-item"><a href="#!">Admins&Users</a>
+    </li>
+    <li class="breadcrumb-item"><a href="#!">My account</a>
+    </li>
+    
+{% endblock chemin %}
+
+
+
+{% block content %}
+
+{% block alert %}
+  
+  {% if alert %}
+  <div class="alert alert-success" role="alert">
+    <i class="bi bi-check-circle-fill me-2"></i>
+    Information updated successfully.
+  </div>
+  <script>
+    setTimeout(function() {
+      $('.alert').fadeOut('slow');
+    }, 4000);
+  </script>
+    
+    
+  {% endif %}
+    
+{% endblock alert %}
+  
+<center>
+  <div class="row">
+    <div class="col-sm-12">
+        <!-- Basic Form Inputs card start -->
+        <div class="card">
+            <div class="card-block">
+                <h4 class="sub-title">My account</h4>
+                <form enctype="multipart/form-data" method="post">
+                  {% csrf_token %}
+                  <div class="form-group row" style="margin-top:40px">
+                      <div class="col-sm-1">
+                      </div>
+                      <label class="col-sm-1 col-form-label">Name</label>
+                      <div class="col-sm-4">
+                          <input id="first_name" name="first_name" type="text" class="form-control" value="{{request.user.first_name}}" placeholder="First Name">
+                      </div>
+                      <label class="col-sm-1 col-form-label">Surname</label>
+                      <div class="col-sm-4">
+                        <input type="text" id="last_name" name="last_name" class="form-control" value="{{request.user.last_name}}" placeholder="Last name">
+                      </div>
+                  </div>
+
+                  <div class="form-group row" style="margin-top:40px">
+                    <div class="col-sm-1">
+                    </div>
+                    <label class="col-sm-1 col-form-label">Email</label>
+                    <div class="col-sm-4">
+                        <input type="email" id="email" name="email" class="form-control" value="{{request.user.email}}">
+                    </div>
+                    <label class="col-sm-1 col-form-label">Password</label>
+                    <div class="col-sm-4">
+                        <input type="password" id="password" name="password" class="form-control" placeholder="Password" id="password">
+                    </div>
+                    <div class="col-sm-1">
+                    </div>
+                  </div>
+
+
+                <div class="form-group row" style="margin-top:40px">
+                  <div class="col-sm-1">
+                  </div>
+                  <label class="col-sm-1 col-form-label">Image</label>
+                  <div class="col-sm-4">
+                    <input type="file" name="image" id="image" class="form-control-file">
+
+                  </div>
+                  <label class="col-sm-1 col-form-label">is Admin?</label>
+                  <div class="col-sm-1">
+                      <input style="margin-top:10px" name="is_admin" id="is_admin" type="checkbox" class="form-control"
+                      {% if request.user.is_staff %}
+                        checked
+                      {% endif %}>
+                  </div>
+                  <div class="col-sm-1">
+                  </div>
+                </div>
+                <div class="form-group row" style="margin-top:40px">
+                  <div class="col-sm-4">
+                    </div>
+                  <div class="col-sm-4">
+                    <center>
+                    <input type="submit" class="btn btn-primary bt" value="Save" style="margin-top:20px">
+                    </center>
+                    </div>
+                </div>
+              </form>
+            </div>
+        </div>
+        <!-- Basic Form Inputs card end -->
+    </div>
+  </div>
+
+</center>
+{% endblock content %}
+    
+
+
+
+  {% block javascript %}
+<script type="text/javascript" src="{% static 'utils/dt.js'%}"></script>
+<script type="text/javascript" src="{% static 'utils/add_camera_ajax.js'%}"></script>
+<script type="text/javascript" src="{% static 'utils/delete_camera_ajax.js'%}"></script>
+<script type="text/javascript" src="{% static 'utils/activate_camera.js'%}"></script>
+
+{% endblock javascript %}
+    

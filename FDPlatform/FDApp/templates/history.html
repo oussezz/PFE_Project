@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block stylesheets %}
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <!-- Load Bootstrap CSS and JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <!-- Set up some CSS for the map and modal -->
+    
+
+{% endblock stylesheets %}
+  
+{% block title %}
+    Streaming server cameras history
+{% endblock title %}
+{% block history_sidebar %}
+  active
+{% endblock history_sidebar %}
+
+{% block titre %}
+      Streaming server cameras history
+{% endblock titre %}
+
+{% block definition %}
+    This page shows the history of the cameras of the streaming server.
+{% endblock definition %}
+
+
+{% block chemin %}
+    <li class="breadcrumb-item">
+        <a href="/"> <i class="fa fa-home"></i> </a>
+    </li>
+    <li class="breadcrumb-item"><a href="#!">Streaming server</a>
+    </li>
+    <li class="breadcrumb-item"><a href="#!">History</a>
+    </li>
+{% endblock chemin %}
+    
+
+
+
+
+
+{% block content %}
+
+<center>
+
+    <h1 >Streaming server history</h1>
+    <button type="button" class="btn btn-primary  float-left" data-toggle="modal" data-target="#addCameraModal">
+      Refresh
+      </button>
+      <button type="button" class="btn btn-danger  float-left" data-toggle="modal" data-target="#addCameraModal" style="margin-left:10pxq">
+        Clear all history
+        </button>
+      <br>
+      
+      
+    <table style="padding-top:20px" id="example" class="table table-striped table-bordered dt-responsive nowrap" style="width:100%">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>IP</th>
+                <th>Hisrory</th>
+            </tr>
+        </thead>
+        <tbody id="bd">
+            {% for camera in cameras %}
+                <tr>
+                    <td>{{ camera.id }}</td>
+                    <td>{{ camera.name }}</td>
+                    <td>{{ camera.ip }}</td>
+                    <td>
+                      <a href="/cam_history/{{camera.id}}" class="btn btn-primary btn-sm">View</a>
+                      <a href="clear" class="btn btn-danger btn-sm">Clear history</a>
+                    </td>
+                    
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+
+
+  </center>
+
+
+  {% endblock content %}
+    
+
+{% block javascript %}
+<script type="text/javascript" src="{% static 'utils/dt.js'%}"></script>
+
+{% endblock javascript %}
+    
